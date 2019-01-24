@@ -1,6 +1,6 @@
 // ACceptance MAtrix generator
 // use: .x acma.cc(thrown, reconstructed, columns, rows) (5=row=col is usually ok)
-void *acma(TNtuple *th, TNtuple * re, Int_t ncol, Int_t nrow) // ncol = max thrown pions
+void *acma(TNtuple *th, TNtuple * re, Int_t ncol, Int_t nrow, const char * dataset) // ncol = max thrown pions
 {
   
   
@@ -36,5 +36,7 @@ void *acma(TNtuple *th, TNtuple * re, Int_t ncol, Int_t nrow) // ncol = max thro
       if ( re->GetLeaf("pid")->GetValue() == 211 )
   	recount++;
     }
+  TFile f("matrix.root","recreate",dataset);
+  hist->Write();
   
 }
