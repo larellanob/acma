@@ -1,5 +1,6 @@
 // ACceptance MAtrix generator
-// use: .x acma.cc(thrown, reconstructed, columns, rows) (5=row=col is usually ok)
+// use: .x acma.cc(thrown, reconstructed, columns, rows, dataset) (5=row=col is usually ok)
+// dataset e.g. "Pb", "Pb1", etc. it gives the files some title and in the future some suffix for filename
 void acma(TNtuple *th, TNtuple * re, Int_t ncol, Int_t nrow, const char * dataset) // ncol = max thrown pions
 {
   
