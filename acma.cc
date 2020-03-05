@@ -1,13 +1,20 @@
 // ACceptance MAtrix generator
-// use: .x acma.cc(thrown, reconstructed, columns, rows, dataset) (5=row=col is usually ok)
-// dataset e.g. "Pb", "Pb1", etc. it gives the files some title and in the future some suffix for filename
-TString dataset = "C";
-void acma()
-//void acma(TNtuple *th, TNtuple * re, Int_t ncol, Int_t nrow, const char * dataset) // ncol = max thrown pions
+void acma(TString filelist = "simlist.txt" )
 {
-  // Put all simulation files you want to read in "simlist.txt"
-  ifstream in("simlist.txt", ios::in);
-
+  // Use as input a file (e.g. ./simlist.txt) with a list of all the input simulation files
+  // example usage as macro, from bash terminal:
+  // root -l acma.cc\(\"input/simulation_files_C2.txt\"\)
+  cout << "Using filelist: " << filelist << endl;
+  ifstream in(filelist, ios::in);
+  TString dataset;
+  // I'm just interested in the filename after an
+  // arbitrary number of dirs in the path, delimited by "/"
+  // get a load of how how easy it is to split a string by a delimiter in ROOT!
+  TObjArray *tx = filelist.Tokenize("/");
+  dataset = ((TObjString *)(tx->At(tx->GetEntries()-1)))->String();
+  dataset.ReplaceAll(".txt","");
+  cout << "Using dataset: " << dataset << endl;
+  
   TChain chth("tree_thrown");
   TChain chre("tree_accept");
   while ( in ) {
@@ -109,10 +116,10 @@ void acma()
   hist_plus->Draw("colz text");
   new TCanvas();
   hist_minu->Draw("colz text");
-  TFile f("matrix_plus.root","recreate",dataset);
+  TFile f("output/matrix_plus_"+dataset+".root","recreate",dataset);
   hist_plus->Write();
   f.Close();
-  TFile g("matrix_minu.root","recreate",dataset);
+  TFile g("output/matrix_minu_"+dataset+".root","recreate",dataset);
   hist_minu->Write();
   g.Close();
 }
